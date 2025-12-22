@@ -1,0 +1,29 @@
+# Maven / Gradle
+target/
+build/
+.gradle/
+!gradle-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Compilados
+*.class
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+
+# Testes
+out/
