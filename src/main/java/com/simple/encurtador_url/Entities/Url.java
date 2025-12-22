@@ -11,33 +11,33 @@ import jakarta.persistence.Table;
 @Table(name = "urls")
 public class Url {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String code;
+  @Column(nullable = false, unique = true)
+  private String code;
 
-    @Column(nullable = false)
-    private String originalUrl;
+  @Column(unique = true, nullable = false)
+  private String originalUrl;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
+  public String getOriginalUrl() {
+    return originalUrl;
+  }
 
-    public void setCode(String code) {
-      this.code = code;
-    }
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-    public void setOriginalUrl(String originalUrl) {
-      this.originalUrl = originalUrl;
-    }
+  public void setOriginalUrl(String originalUrl) {
+    this.originalUrl = originalUrl;
+  }
 }

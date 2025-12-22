@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.simple.encurtador_url.Entities.Url;
 
-public interface JpaUrlRepository  extends  JpaRepository<Url, Long> {
+public interface JpaUrlRepository extends JpaRepository<Url, Long> {
 
   Optional<Url> findByCode(String code);
-  
+
+  Optional<Url> findByOriginalUrl(String originalUrl);
+
 }
