@@ -36,7 +36,7 @@ public class UrlController {
   @GetMapping("/{code}")
   public void redirect(@PathVariable String code, HttpServletResponse response) throws IOException {
     String url = service.redirectUri(code);
-    response.setStatus(HttpServletResponse.SC_FOUND); // 302
+    response.setStatus(HttpServletResponse.SC_FOUND);
     response.setHeader("Location", url);
   }
 }
