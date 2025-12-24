@@ -1,6 +1,5 @@
 package com.simple.encurtador_url.service;
 
-import java.math.BigInteger;
 import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Optional;
@@ -10,27 +9,38 @@ import org.springframework.stereotype.Service;
 import com.simple.encurtador_url.Entities.Url;
 import com.simple.encurtador_url.Infra.persistence.JpaUrlRepository;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Service
 public class UrlService {
   private final JpaUrlRepository repo;
+  private static final String BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  private static final SecureRandom RANDOM = new SecureRandom();
+  private static final int HASH_LENGTH = 6;
 
-  public UrlService(JpaUrlRepository repo) {
-    this.repo = repo;
-
+  private static String generateBase62Hash(int length) {
+    StringBuilder sb = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      sb.append(BASE62.charAt(RANDOM.nextInt(BASE62.length())));
+    }
+    return sb.toString();
   }
 
-  private Url save(String code, String Url) {
-    Url u = new Url();
-    u.setCode(code);
-    u.setOriginalUrl(Url);
+  @Transactional
+  private Url save(String code, String originalUrl) {
+    Url u = Url.builder()
+        .code(code)
+        .originalUrl(originalUrl)
+        .build();
     return repo.save(u);
   }
 
   private String getUrlByCode(String code) {
     return repo.findByCode(code)
         .map(Url::getOriginalUrl)
-        .orElse("");
+        .orElseThrow(() -> new IllegalArgumentException("Cdigo de url nao encotrada"));
   }
 
   private Optional<Url> getByOriginalUrl(String url) {
@@ -55,18 +65,15 @@ public class UrlService {
     return getByOriginalUrl(url)
         .map(u -> baseUrl + u.getCode())
         .orElseGet(() -> {
-          String hash = generateHash(14);
+          String hash;
+          do {
+            hash = generateBase62Hash(HASH_LENGTH);
+          } while (repo.findByCode(hash).isPresent());
+
           save(hash, url);
           return baseUrl + hash;
         });
 
-  }
-
-  private String generateHash(int byteLength) {
-    SecureRandom secureRandom = new SecureRandom();
-    byte[] token = new byte[byteLength];
-    secureRandom.nextBytes(token);
-    return new BigInteger(1, token).toString(16);
   }
 
   public String redirectUri(String code) {

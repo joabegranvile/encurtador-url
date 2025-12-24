@@ -6,9 +6,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "urls")
+@Data
+@NoArgsConstructor   // Construtor sem parâmetros (necessário para JPA)
+@AllArgsConstructor  // Construtor com todos os campos
+@Builder
 public class Url {
 
   @Id
@@ -20,24 +28,4 @@ public class Url {
 
   @Column(unique = true, nullable = false)
   private String originalUrl;
-
-  public Long getId() {
-    return id;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public String getOriginalUrl() {
-    return originalUrl;
-  }
-
-  public void setCode(String code) {
-    this.code = code;
-  }
-
-  public void setOriginalUrl(String originalUrl) {
-    this.originalUrl = originalUrl;
-  }
 }
